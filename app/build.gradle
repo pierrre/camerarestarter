@@ -5,7 +5,7 @@ android {
     buildToolsVersion "23.0.1"
 
     defaultConfig {
-        applicationId "camerarestarter.exlyo.com.camerarestarter"
+        applicationId "com.exlyo.camerarestarter"
         minSdkVersion 9
         targetSdkVersion 23
         versionCode 1
