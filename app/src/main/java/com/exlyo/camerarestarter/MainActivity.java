@@ -1,4 +1,4 @@
-package camerarestarter.exlyo.com.camerarestarter;
+package com.exlyo.camerarestarter;
 
 import android.app.Activity;
 import android.os.Bundle;
