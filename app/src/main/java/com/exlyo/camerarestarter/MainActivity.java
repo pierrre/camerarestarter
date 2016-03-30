@@ -1,6 +1,7 @@
 package com.exlyo.camerarestarter;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
@@ -20,13 +21,7 @@ public class MainActivity extends AppCompatActivity {
 		findViewById(R.id.restart_camera_button).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(final View v) {
-				try {
-					runRestartCameraShellCommand();
-					showToastMessage(MainActivity.this, getString(R.string.camera_restared_successfully));
-				} catch (Throwable t) {
-					t.printStackTrace();
-					showToastMessage(MainActivity.this, getString(R.string.camera_restart_failed, t.getMessage()));
-				}
+				restartButtonAction(MainActivity.this);
 			}
 		});
 		findViewById(R.id.help_button).setOnClickListener(new View.OnClickListener() {
@@ -37,7 +32,17 @@ public class MainActivity extends AppCompatActivity {
 		});
 	}
 
-	private void runRestartCameraShellCommand() throws Throwable {
+	public static void restartButtonAction(final Context _context) {
+		try {
+			runRestartCameraShellCommand();
+			showToastMessage(_context, _context.getString(R.string.camera_restared_successfully));
+		} catch (Throwable t) {
+			t.printStackTrace();
+			showToastMessage(_context, _context.getString(R.string.camera_restart_failed, t.getMessage()));
+		}
+	}
+
+	private static void runRestartCameraShellCommand() throws Throwable {
 		final Process p = Runtime.getRuntime().exec("su");
 		DataOutputStream os = null;
 		BufferedReader br = null;
@@ -81,18 +86,23 @@ public class MainActivity extends AppCompatActivity {
 		}
 	}
 
-	private static void showToastMessage(@NonNull final Activity _activity, final String _messageText) {
-		_activity.runOnUiThread(new Runnable() {
+	private static void showToastMessage(@NonNull final Context _context, final String _messageText) {
+		final Runnable showToastRunnable = new Runnable() {
 			@Override
 			public void run() {
-				_activity.runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						Toast.makeText(_activity, _messageText, Toast.LENGTH_SHORT).show();
-					}
-				});
+				Toast.makeText(_context, _messageText, Toast.LENGTH_SHORT).show();
 			}
-		});
+		};
+		if (_context instanceof MainActivity) {
+			((MainActivity) _context).runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					showToastRunnable.run();
+				}
+			});
+		} else {
+			showToastRunnable.run();
+		}
 	}
 
 	private static void showMessageDialog(@NonNull final Activity _activity, final String _messageText) {
