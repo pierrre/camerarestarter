@@ -52,36 +52,33 @@ public class MainActivity extends AppCompatActivity {
 				final int pid = Integer.parseInt(line.substring(0, line.indexOf(" ")));
 				os.writeBytes("kill " + pid + "\n");
 			}
-		} catch (Throwable t) {
-			t.printStackTrace();
-		}
+		} finally {
+			if (os != null) {
+				try {
+					os.writeBytes("exit\n");
+				} catch (Throwable t) {
+					t.printStackTrace();
+				}
+				try {
+					os.flush();
+				} catch (Throwable t) {
+					t.printStackTrace();
+				}
+				try {
+					os.close();
+				} catch (Throwable t) {
+					t.printStackTrace();
+				}
+			}
 
-		if (os != null) {
-			try {
-				os.writeBytes("exit\n");
-			} catch (Throwable t) {
-				t.printStackTrace();
-			}
-			try {
-				os.flush();
-			} catch (Throwable t) {
-				t.printStackTrace();
-			}
-			try {
-				os.close();
-			} catch (Throwable t) {
-				t.printStackTrace();
-			}
-		}
-
-		if (br != null) {
-			try {
-				br.close();
-			} catch (Throwable t) {
-				t.printStackTrace();
+			if (br != null) {
+				try {
+					br.close();
+				} catch (Throwable t) {
+					t.printStackTrace();
+				}
 			}
 		}
-
 	}
 
 	private static void showToastMessage(@NonNull final Activity _activity, final String _messageText) {
