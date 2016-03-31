@@ -1,8 +1,0 @@
-(dp0
-S'ic_launcher-web.png'
-p1
-L18686L
-sS'ic_launcher.svg'
-p2
-L2445L
-s.
